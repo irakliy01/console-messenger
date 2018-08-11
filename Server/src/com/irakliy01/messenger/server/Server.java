@@ -1,6 +1,11 @@
 package com.irakliy01.messenger.server;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -24,6 +29,26 @@ public class Server {
         clearConsole(); // tries to clear console
         console.close();
 
+        try (ServerSocket serverSocket = new ServerSocket(port); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
+
+            System.out.println("SERVER HAS BEEN ESTABLISHED\n\nLocal IPs:");
+            showLocalIPs();
+            System.out.println("\nPort: " + port);
+
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+        }
+
+    }
+
+    private static void showLocalIPs() {
+
+        List<String> addresses = IPsGetter.getLocalAdresses();
+
+        for (String ip : addresses) {
+            System.out.println(ip);
+        }
+
     }
 
 
@@ -41,6 +66,7 @@ public class Server {
     }
 
     private static void clearConsole() {
+        System.out.println();
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
