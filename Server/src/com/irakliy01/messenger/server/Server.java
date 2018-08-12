@@ -1,17 +1,19 @@
 package com.irakliy01.messenger.server;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class Server {
 
     private static int port;
+    private static ExecutorService executeIt = Executors.newFixedThreadPool(10); // Server can accept only 10 connections
     private static String programUsageString = "java ... <port>\nwhere <port> is port number between 1025–65535";
     private static Logger LOGGER = Logger.getLogger(Server.class.getName());
 
@@ -29,11 +31,18 @@ public class Server {
         clearConsole(); // tries to clear console
         console.close();
 
-        try (ServerSocket serverSocket = new ServerSocket(port); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
 
-            System.out.println("SERVER HAS BEEN ESTABLISHED\n\nLocal IPs:");
+            System.out.println("SERVER HAS BEEN CREATED\n\nLocal IPs:");
             showLocalIPs();
-            System.out.println("\nPort: " + port);
+            System.out.println("\nPort: " + port + "\n");
+
+            while (!serverSocket.isClosed()) {
+
+                Socket socket = serverSocket.accept();
+                System.out.println("Found client. Connecting to ".concat(socket.getInetAddress().getCanonicalHostName()).concat("..."));
+
+            }
 
         } catch (IOException e) {
             LOGGER.severe(e.getMessage());
