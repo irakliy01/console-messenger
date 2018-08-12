@@ -12,7 +12,7 @@ class IPsGetter {
 
     private static Logger LOGGER = Logger.getLogger(Server.class.getName());
 
-    static Vector<String> getLocalAdresses() {
+    static Vector<String> getLocalAddresses() {
 
         Vector<String> addresses = new Vector<>();
 

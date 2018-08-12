@@ -41,8 +41,12 @@ public class Server {
 
                 Socket socket = serverSocket.accept();
                 System.out.println("Found client. Connecting to ".concat(socket.getInetAddress().getCanonicalHostName()).concat("..."));
+                executeIt.execute(new EchoThread(socket));
 
             }
+
+            System.out.println("Server is shutting down");
+            executeIt.shutdown();
 
         } catch (IOException e) {
             LOGGER.severe(e.getMessage());
@@ -52,7 +56,7 @@ public class Server {
 
     private static void showLocalIPs() {
 
-        List<String> addresses = IPsGetter.getLocalAdresses();
+        List<String> addresses = IPsGetter.getLocalAddresses();
 
         for (String ip : addresses) {
             System.out.println(ip);
@@ -70,7 +74,7 @@ public class Server {
             System.err.println("Parameter format error! Notice that parameter should be a number\n" +
                     "Usage of the program:\n".concat(programUsageString) +
                     "\nif you type '0' as port, then server will listen on any free port");
-            System.exit(1);
+            System.exit(2);
         }
     }
 
