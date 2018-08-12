@@ -21,14 +21,17 @@ class EchoThread implements Runnable {
 //        this.id = id;
 
         if (!socket.isClosed() && socket.isConnected())
-            System.out.println(socket.getInetAddress().getCanonicalHostName().concat(" successfully connected to the server"));
+            System.out.println(socket.getInetAddress().getCanonicalHostName().concat(" [").concat(socket.getInetAddress().getHostAddress()).concat("] successfully connected to the server"));
     }
 
     private void sendMessage(String message) {
+
+        String finalMessage = "[".concat(inetAddress.getCanonicalHostName()).concat("] ").concat(message);
+
         for (ClientList client : ClientList.GetClientList()) {
             if (!client.getInetAddress().equals(socket.getInetAddress())) {
                 try {
-                    client.getWriter().writeUTF(message);
+                    client.getWriter().writeUTF(finalMessage);
                     client.getWriter().flush();
                 } catch (IOException e) {
                     LOGGER.severe(e.getMessage());
@@ -53,10 +56,16 @@ class EchoThread implements Runnable {
             }
 
             ClientList.RemoveOldClient(inetAddress);
-            System.out.println(inetAddress.getCanonicalHostName().concat(" disconnected from the server"));
+            System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
+
+        } catch (IOException e) {
+            ClientList.RemoveOldClient(inetAddress);
+            System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
 
         } catch (Exception e) {
             LOGGER.severe(e.getMessage());
+            ClientList.RemoveOldClient(inetAddress);
+            System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
         }
 
     }

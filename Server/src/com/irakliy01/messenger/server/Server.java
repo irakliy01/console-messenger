@@ -40,7 +40,7 @@ public class Server {
             while (!serverSocket.isClosed()) {
 
                 Socket socket = serverSocket.accept();
-                System.out.println("Found client. Connecting to ".concat(socket.getInetAddress().getCanonicalHostName()).concat("..."));
+                System.out.println("Found client. Connecting to ".concat(socket.getInetAddress().getCanonicalHostName()).concat(" [").concat(socket.getInetAddress().getHostAddress()).concat("]..."));
                 executeIt.execute(new EchoThread(socket));
 
             }
@@ -68,12 +68,11 @@ public class Server {
     private static void setPort(String port) {
 
         int tmp = Integer.parseInt(port.trim());
-        if (tmp >= 1025 && tmp <= 65535 || tmp == 0)
+        if (tmp >= 1025 && tmp <= 65535)
             Server.port = tmp;
         else {
             System.err.println("Parameter format error! Notice that parameter should be a number\n" +
-                    "Usage of the program:\n".concat(programUsageString) +
-                    "\nif you type '0' as port, then server will listen on any free port");
+                    "Usage of the program:\n".concat(programUsageString));
             System.exit(2);
         }
     }
