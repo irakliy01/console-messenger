@@ -14,7 +14,7 @@ public class Server {
 
     private static int port;
     private static ExecutorService executeIt = Executors.newFixedThreadPool(10); // Server can accept only 10 connections
-    private static String programUsageString = "java ... <port>\nwhere <port> is port number between 1025–65535";
+    private static String programUsageString = "java ... <port>\nwhere <port> is port number between 1025–65535\nif you type '0' as port than server will listen on any free port";
     private static Logger LOGGER = Logger.getLogger(Server.class.getName());
 
     public static void main(String[] args) {
@@ -35,7 +35,7 @@ public class Server {
 
             System.out.println("SERVER HAS BEEN CREATED\n\nLocal IPs:");
             showLocalIPs();
-            System.out.println("\nPort: " + port + "\n");
+            System.out.println("\nPort: " + serverSocket.getLocalPort() + "\n");
 
             while (!serverSocket.isClosed()) {
 
@@ -45,7 +45,7 @@ public class Server {
 
             }
 
-            System.out.println("Server is shutting down");
+            System.out.println("SERVER IS SHUTTING DOWN");
             executeIt.shutdown();
 
         } catch (IOException e) {
@@ -68,7 +68,7 @@ public class Server {
     private static void setPort(String port) {
 
         int tmp = Integer.parseInt(port.trim());
-        if (tmp >= 1025 && tmp <= 65535)
+        if (tmp >= 1025 && tmp <= 65535 || tmp == 0)
             Server.port = tmp;
         else {
             System.err.println("Parameter format error! Notice that parameter should be a number\n" +
