@@ -26,7 +26,7 @@ class EchoThread implements Runnable {
 
     private void sendMessage(String message) {
 
-        String finalMessage = "[".concat(inetAddress.getCanonicalHostName()).concat("] ").concat(message);
+        String finalMessage = "\n[".concat(inetAddress.getCanonicalHostName()).concat("] ").concat(message);
 
         for (ClientList client : ClientList.GetClientList()) {
             if (!client.getInetAddress().equals(socket.getInetAddress())) {
