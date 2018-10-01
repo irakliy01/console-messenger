@@ -21,7 +21,7 @@ class EchoThread implements Runnable {
 //        this.id = id;
 
         if (!socket.isClosed() && socket.isConnected())
-            System.out.println(socket.getInetAddress().getCanonicalHostName().concat(" [").concat(socket.getInetAddress().getHostAddress()).concat("] successfully connected to the server"));
+            System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(socket.getInetAddress().getHostAddress()).concat("] successfully connected to the server"));
     }
 
     private void sendMessage(String message) {
