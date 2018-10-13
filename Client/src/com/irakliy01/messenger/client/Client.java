@@ -7,10 +7,21 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+/**
+ * <p>Main class of the module Client. It contains only private static methods and one public method (main)</p>
+ * <p>It connects to the server and sends/receives messages</p>
+ *
+ * @author irakliy01
+ * @version 13/10/2018
+ */
 public class Client {
 
     private static Logger LOGGER = Logger.getLogger(Client.class.getName());
 
+    /**
+     * Main method of class Client. Connects to the server
+     * @param args this parameter is not used
+     */
     public static void main(String[] args) {
 
         Scanner console = new Scanner(System.in); // Stream for input from console
@@ -39,8 +50,6 @@ public class Client {
 
             System.out.println("Successfully connected to the server\n");
 
-            // TODO: open second console where will be shown only received messages
-
             new Thread(() -> {
                 while (!socket.isClosed() && socket.isConnected()) {
                     String input;
@@ -48,8 +57,7 @@ public class Client {
                         input = dataInputStream.readUTF();
                         System.out.println(input);
                     } catch (IOException e) {
-//                        LOGGER.severe(e.getMessage());
-                        System.err.println("Stopped receiving messages from the server\nTry to reconnect");
+                        LOGGER.severe("Stopped receiving messages from the server\nTry to reconnect");
                         break;
                     }
                 }

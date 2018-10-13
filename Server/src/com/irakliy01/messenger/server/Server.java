@@ -10,6 +10,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
+/**
+ * <p>Main class of the module Server. It contains only private static methods and one public method (main)</p>
+ * <p>It starts server on some port and listens for incoming connections</p>
+ *
+ * @author irakliy01
+ * @version 13/10/2018
+ */
 public class Server {
 
     private static int port;
@@ -17,6 +24,10 @@ public class Server {
     private static String programUsageString = "java ... <port>\nwhere <port> is port number between 1025–65535\nif you type '0' as port than server will listen on any free port";
     private static Logger LOGGER = Logger.getLogger(Server.class.getName());
 
+    /**
+     * Main method of class Server. Starts server and listens for connections
+     * @param args port that user writes in console. If user did not provide port in console, he will be asked to do it later. If user writes more than one argument than program will write an error message and close.
+     */
     public static void main(String[] args) {
 
         Scanner consoleInput = new Scanner(System.in); // Stream for input from console
@@ -57,6 +68,9 @@ public class Server {
 
     }
 
+    /**
+     * Prints at console all local IP
+     */
     private static void showLocalIPs() {
 
         List<String> addresses = IPsGetter.getLocalAddresses();
@@ -67,7 +81,10 @@ public class Server {
 
     }
 
-
+    /**
+     * Sets server port
+     * @param port port
+     */
     private static void setPort(String port) {
 
         int tmp = 0;
@@ -89,6 +106,9 @@ public class Server {
         }
     }
 
+    /**
+     * Clears console
+     */
     private static void clearConsole() {
         System.out.println();
         System.out.print("\033[H\033[2J");
