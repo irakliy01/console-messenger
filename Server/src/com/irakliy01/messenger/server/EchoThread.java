@@ -47,7 +47,6 @@ class EchoThread implements Runnable {
         }
     }
 
-
     @Override
     public void run() {
 
@@ -69,11 +68,14 @@ class EchoThread implements Runnable {
         } catch (IOException e) {
             ClientList.RemoveOldClient(inetAddress);
             System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
-
         } catch (UserExistsException e) {
-            LOGGER.severe(e.getMessage());
-            System.err.println(e.getMessage());
             System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
+            LOGGER.severe(e.getMessage());
+            try {
+                socket.close();
+            } catch (IOException e1) {
+                LOGGER.severe(e.getMessage());
+            }
         }
 
     }

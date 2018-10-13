@@ -24,19 +24,24 @@ class ClientList {
 
     /**
      * Adds new user to the list of connected to the server users
-     * @param address address of new client
+     *
+     * @param address          address of new client
      * @param dataOutputStream output stream of new client
      * @throws UserExistsException throws this exception if user with such IP address is already connected to the server
      */
     static void AddNewClient(InetAddress address, DataOutputStream dataOutputStream) throws UserExistsException {
         ClientList client = new ClientList(address, dataOutputStream);
-        if (clients.contains(client))
-            throw new UserExistsException(address);
+        for (ClientList c : clients) {
+            if (c.inetAddress.getHostAddress().equals(address.getHostAddress()))
+                throw new UserExistsException(address);
+        }
         clients.add(client);
+        //TODO: add message to clients that new user connected to the server
     }
 
     /**
      * Removes client from list of connected users
+     *
      * @param address IP address of user
      */
     static void RemoveOldClient(InetAddress address) {
@@ -46,10 +51,12 @@ class ClientList {
                 break;
             }
         }
+        //TODO: add message to clients that user disconnected from the server
     }
 
     /**
      * Get list of clients connected to the server
+     *
      * @return list of clients
      */
     static HashSet<ClientList> GetClientList() {
@@ -58,6 +65,7 @@ class ClientList {
 
     /**
      * Get IP address of certain client
+     *
      * @return inetAddress of certain client
      */
     InetAddress getInetAddress() {
@@ -66,6 +74,7 @@ class ClientList {
 
     /**
      * Get DataOutputStream of certain client
+     *
      * @return DataOutputStream of certain client
      */
     DataOutputStream getWriter() {
