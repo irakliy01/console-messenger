@@ -36,7 +36,7 @@ public class Server {
             setPort(args[0]);
         } else if (args.length > 1) {
             System.err.println("Too much arguments passed to the program\n" + programUsageString);
-            System.exit(3);
+            System.exit(-1);
         } else {
             System.out.print("Type port: ");
             setPort(consoleInput.nextLine());
@@ -94,7 +94,7 @@ public class Server {
         } catch (NumberFormatException ex) {
             System.err.println("Parameter format error! Notice that parameter should be a number\n" +
                     "Usage of the program:\n".concat(programUsageString));
-            System.exit(2);
+            System.exit(-1);
         }
 
         if (tmp >= 1025 && tmp <= 65535 || tmp == 0)
@@ -102,7 +102,8 @@ public class Server {
         else {
             System.err.println("Parameter format error! Notice that parameter should be a number\n" +
                     "Usage of the program:\n".concat(programUsageString));
-            System.exit(2);
+            System.exit(-1);
+            // TODO: change LOGGER messages to serr where it should be used
         }
     }
 

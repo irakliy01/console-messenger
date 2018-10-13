@@ -70,7 +70,6 @@ class EchoThread implements Runnable {
             System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
         } catch (UserExistsException e) {
             System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
-            LOGGER.severe(e.getMessage());
             try {
                 socket.close();
             } catch (IOException e1) {
