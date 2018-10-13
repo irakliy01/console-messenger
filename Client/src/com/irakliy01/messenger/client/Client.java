@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.sql.Connection;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * <p>It connects to the server and sends/receives messages</p>
  *
  * @author irakliy01
- * @version 13/10/2018
+ * @version 14/10/2018
  */
 public class Client {
 
@@ -53,7 +53,7 @@ public class Client {
              DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
              DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())) {
 
-            System.out.println("Successfully connected to the server\n");
+            writeMessage("Successfully connected to the server\n");
 
             new Thread(() -> {
                 while (!socket.isClosed() && socket.isConnected()) {
@@ -113,6 +113,21 @@ public class Client {
 
     private static boolean validPort(int port) {
         return port >= 1025 && port <= 65535 || port == 0;
+    }
+
+
+    /**
+     * Writes to console message with timestamp
+     *
+     * @param message message
+     */
+    private static void writeMessage(String message) {
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy");
+
+        String finalMessage = "[".concat(dateTimeFormatter.format(LocalDateTime.now()).concat("] "));
+
+        System.out.println(finalMessage.concat(message));
     }
 
     private static void clearConsole() {
