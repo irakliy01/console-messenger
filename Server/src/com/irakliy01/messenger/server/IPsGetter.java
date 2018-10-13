@@ -8,10 +8,20 @@ import java.util.Enumeration;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+/**
+ * Class which has only one method to get local IP addresses
+ *
+ * @author irakliy01
+ * @version 13/10/2018
+ */
 class IPsGetter {
 
     private static Logger LOGGER = Logger.getLogger(Server.class.getName());
 
+    /**
+     * Returns all local IP addresses as Vector
+     * @return all local IP addresses as Vector
+     */
     static Vector<String> getLocalAddresses() {
 
         Vector<String> addresses = new Vector<>();

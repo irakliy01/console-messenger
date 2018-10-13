@@ -7,18 +7,25 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Logger;
 
+/**
+ * Thread which works with every user independently. It reads char sequence from the console and send it to other clients
+ *
+ * @author irakliy01
+ * @version 13/10/2018
+ */
 class EchoThread implements Runnable {
 
     private Socket socket;
     private Logger LOGGER = Logger.getLogger(EchoThread.class.getName());
-    //    private int id;
     private InetAddress inetAddress;
 
-
-    EchoThread(Socket clientSocket/*, int id*/) {
+    /**
+     * Default constructor for EchoThread. Gets information of the user from socket
+     * @param clientSocket socket of client from which certain info will be taken
+     */
+    EchoThread(Socket clientSocket) {
         socket = clientSocket;
         inetAddress = socket.getInetAddress();
-//        this.id = id;
 
         if (!socket.isClosed() && socket.isConnected())
             System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(socket.getInetAddress().getHostAddress()).concat("] successfully connected to the server"));
@@ -39,6 +46,7 @@ class EchoThread implements Runnable {
             }
         }
     }
+
 
     @Override
     public void run() {
@@ -62,9 +70,9 @@ class EchoThread implements Runnable {
             ClientList.RemoveOldClient(inetAddress);
             System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
 
-        } catch (Exception e) {
+        } catch (UserExistsException e) {
             LOGGER.severe(e.getMessage());
-            ClientList.RemoveOldClient(inetAddress);
+            System.err.println(e.getMessage());
             System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
         }
 
