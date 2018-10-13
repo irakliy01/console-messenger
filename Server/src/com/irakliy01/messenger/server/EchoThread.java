@@ -5,13 +5,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
 /**
  * Thread which works with every user independently. It reads char sequence from the console and send it to other clients
  *
  * @author irakliy01
- * @version 13/10/2018
+ * @version 14/10/2018
  */
 class EchoThread implements Runnable {
 
@@ -28,12 +30,14 @@ class EchoThread implements Runnable {
         inetAddress = socket.getInetAddress();
 
         if (!socket.isClosed() && socket.isConnected())
-            System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(socket.getInetAddress().getHostAddress()).concat("] successfully connected to the server"));
+            writeMessage(inetAddress.getCanonicalHostName().concat(" [").concat(socket.getInetAddress().getHostAddress()).concat("] successfully connected to the server"));
     }
 
     private void sendMessage(String message) {
 
-        String finalMessage = "\n[".concat(inetAddress.getCanonicalHostName()).concat("] ").concat(message);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy");
+
+        String finalMessage = "\n[".concat(dateTimeFormatter.format(LocalDateTime.now())).concat(" | " + inetAddress.getCanonicalHostName()).concat("] ").concat(message);
 
         for (ClientList client : ClientList.GetClientList()) {
             if (!client.getInetAddress().equals(socket.getInetAddress())) {
@@ -63,14 +67,13 @@ class EchoThread implements Runnable {
             }
 
             ClientList.RemoveOldClient(inetAddress);
-            System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
+            writeMessage(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
 
         } catch (IOException e) {
             ClientList.RemoveOldClient(inetAddress);
-            System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
+            writeMessage(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
         } catch (UserExistsException e) {
-            System.out.println(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
-            LOGGER.severe(e.getMessage());
+            writeMessage(inetAddress.getCanonicalHostName().concat(" [").concat(inetAddress.getHostAddress()).concat("] disconnected from the server"));
             try {
                 socket.close();
             } catch (IOException e1) {
@@ -78,6 +81,19 @@ class EchoThread implements Runnable {
             }
         }
 
+    }
+
+    /**
+     * Writes to console message with timestamp
+     * @param message message
+     */
+    private static void writeMessage(String message) {
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy");
+
+        String finalMessage = "[".concat(dateTimeFormatter.format(LocalDateTime.now()).concat("] "));
+
+        System.out.println(finalMessage.concat(message));
     }
 
 }

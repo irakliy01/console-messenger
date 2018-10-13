@@ -4,6 +4,8 @@ package com.irakliy01.messenger.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -15,7 +17,7 @@ import java.util.logging.Logger;
  * <p>It starts server on some port and listens for incoming connections</p>
  *
  * @author irakliy01
- * @version 13/10/2018
+ * @version 14/10/2018
  */
 public class Server {
 
@@ -36,7 +38,7 @@ public class Server {
             setPort(args[0]);
         } else if (args.length > 1) {
             System.err.println("Too much arguments passed to the program\n" + programUsageString);
-            System.exit(3);
+            System.exit(-1);
         } else {
             System.out.print("Type port: ");
             setPort(consoleInput.nextLine());
@@ -47,19 +49,19 @@ public class Server {
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
 
-            System.out.println("SERVER HAS BEEN CREATED\n\nLocal IPs:");
+            writeMessage("SERVER HAS BEEN CREATED\n\nLocal IPs:");
             showLocalIPs();
             System.out.println("\nPort: " + serverSocket.getLocalPort() + "\n");
 
             while (!serverSocket.isClosed()) {
 
                 Socket socket = serverSocket.accept();
-                System.out.println("Found client. Connecting to ".concat(socket.getInetAddress().getCanonicalHostName()).concat(" [").concat(socket.getInetAddress().getHostAddress()).concat("]..."));
+                writeMessage("Found client. Connecting to ".concat(socket.getInetAddress().getCanonicalHostName()).concat(" [").concat(socket.getInetAddress().getHostAddress()).concat("]..."));
                 executeIt.execute(new EchoThread(socket));
 
             }
 
-            System.out.println("SERVER IS SHUTTING DOWN");
+            writeMessage("SERVER IS SHUTTING DOWN");
             executeIt.shutdown();
 
         } catch (IOException e) {
@@ -94,7 +96,7 @@ public class Server {
         } catch (NumberFormatException ex) {
             System.err.println("Parameter format error! Notice that parameter should be a number\n" +
                     "Usage of the program:\n".concat(programUsageString));
-            System.exit(2);
+            System.exit(-1);
         }
 
         if (tmp >= 1025 && tmp <= 65535 || tmp == 0)
@@ -102,8 +104,22 @@ public class Server {
         else {
             System.err.println("Parameter format error! Notice that parameter should be a number\n" +
                     "Usage of the program:\n".concat(programUsageString));
-            System.exit(2);
+            System.exit(-1);
+            // TODO: change LOGGER messages to serr where it should be used
         }
+    }
+
+    /**
+     * Writes to console message with timestamp
+     * @param message message
+     */
+    private static void writeMessage(String message) {
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy");
+
+        String finalMessage = "[".concat(dateTimeFormatter.format(LocalDateTime.now()).concat("] "));
+
+        System.out.println(finalMessage.concat(message));
     }
 
     /**

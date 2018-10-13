@@ -3,7 +3,11 @@ package com.irakliy01.messenger.client;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.NoRouteToHostException;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -12,7 +16,7 @@ import java.util.logging.Logger;
  * <p>It connects to the server and sends/receives messages</p>
  *
  * @author irakliy01
- * @version 13/10/2018
+ * @version 14/10/2018
  */
 public class Client {
 
@@ -20,6 +24,7 @@ public class Client {
 
     /**
      * Main method of class Client. Connects to the server
+     *
      * @param args this parameter is not used
      */
     public static void main(String[] args) {
@@ -33,13 +38,13 @@ public class Client {
         address = console.nextLine().trim();
         if (!validIP(address)) {
             System.err.println("Unsupported IPv4 address format!");
-            System.exit(2);
+            System.exit(-1);
         }
         System.out.print("Type port: ");
         port = Integer.parseInt(console.nextLine().trim());
         if (!validPort(port)) {
             System.err.println("Unsupported port number!");
-            System.exit(3);
+            System.exit(-1);
         }
 
         clearConsole();
@@ -48,7 +53,7 @@ public class Client {
              DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
              DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())) {
 
-            System.out.println("Successfully connected to the server\n");
+            writeMessage("Successfully connected to the server\n");
 
             new Thread(() -> {
                 while (!socket.isClosed() && socket.isConnected()) {
@@ -57,11 +62,11 @@ public class Client {
                         input = dataInputStream.readUTF();
                         System.out.println(input);
                     } catch (IOException e) {
-                        LOGGER.severe("Stopped receiving messages from the server\nTry to reconnect");
+                        System.err.println("Stopped receiving messages from the server\nTry to reconnect");
                         break;
                     }
                 }
-                System.exit(4);
+                System.exit(-1);
             }).start();
 
             while (true) {
@@ -72,6 +77,10 @@ public class Client {
                 dataOutputStream.flush();
             }
 
+        } catch (NoRouteToHostException e) {
+            System.err.println("Server unreachable");
+        } catch (ConnectException e) {
+            System.err.println("Connection refused. Check port and try again");
         } catch (IOException e) {
             LOGGER.severe(e.getMessage());
         }
@@ -104,6 +113,21 @@ public class Client {
 
     private static boolean validPort(int port) {
         return port >= 1025 && port <= 65535 || port == 0;
+    }
+
+
+    /**
+     * Writes to console message with timestamp
+     *
+     * @param message message
+     */
+    private static void writeMessage(String message) {
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy");
+
+        String finalMessage = "[".concat(dateTimeFormatter.format(LocalDateTime.now()).concat("] "));
+
+        System.out.println(finalMessage.concat(message));
     }
 
     private static void clearConsole() {
