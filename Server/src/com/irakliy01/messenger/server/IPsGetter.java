@@ -34,7 +34,7 @@ class IPsGetter {
                 Enumeration ee = networkInterface.getInetAddresses();
                 while (ee.hasMoreElements()) {
                     InetAddress inetAddress = (InetAddress) ee.nextElement();
-                    if (inetAddress.getHostAddress().equalsIgnoreCase("127.0.0.1")) // Skip localhost
+                    if (inetAddress.isLoopbackAddress()) // Skip localhost
                         continue;
                     if (inetAddress instanceof Inet4Address)  // Add only IPv4 addresses
                         addresses.add(inetAddress.getHostAddress());
