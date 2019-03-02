@@ -28,6 +28,7 @@ public class Server {
 
     /**
      * Main method of class Server. Starts server and listens for connections
+     *
      * @param args port that user writes in console. If user did not provide port in console, he will be asked to do it later. If user writes more than one argument than program will write an error message and close.
      */
     public static void main(String[] args) {
@@ -85,6 +86,7 @@ public class Server {
 
     /**
      * Sets server port
+     *
      * @param port port
      */
     private static void setPort(String port) {
@@ -111,6 +113,7 @@ public class Server {
 
     /**
      * Writes to console message with timestamp
+     *
      * @param message message
      */
     private static void writeMessage(String message) {
@@ -126,9 +129,14 @@ public class Server {
      * Clears console
      */
     private static void clearConsole() {
-        System.out.println();
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        try {
+            if (System.getProperty("os.name").contains("Windows"))
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            else
+                Runtime.getRuntime().exec("clear");
+        } catch (IOException | InterruptedException ex) {
+            LOGGER.severe(ex.getMessage());
+        }
     }
 
 
