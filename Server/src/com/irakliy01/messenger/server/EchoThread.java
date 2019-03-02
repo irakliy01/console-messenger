@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
+import static com.irakliy01.messenger.lib.Writer.writeMessage;
+
+
 /**
  * Thread which works with every user independently. It reads char sequence from the console and send it to other clients
  *
@@ -23,6 +26,7 @@ class EchoThread implements Runnable {
 
     /**
      * Default constructor for EchoThread. Gets information of the user from socket
+     *
      * @param clientSocket socket of client from which certain info will be taken
      */
     EchoThread(Socket clientSocket) {
@@ -81,19 +85,6 @@ class EchoThread implements Runnable {
             }
         }
 
-    }
-
-    /**
-     * Writes to console message with timestamp
-     * @param message message
-     */
-    private static void writeMessage(String message) {
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy");
-
-        String finalMessage = "[".concat(dateTimeFormatter.format(LocalDateTime.now()).concat("] "));
-
-        System.out.println(finalMessage.concat(message));
     }
 
 }

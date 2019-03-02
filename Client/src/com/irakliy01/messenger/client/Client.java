@@ -6,10 +6,11 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.Socket;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.logging.Logger;
+
+import static com.irakliy01.messenger.lib.Writer.writeMessage;
+
 
 /**
  * <p>Main class of the module Client. It contains only private static methods and one public method (main)</p>
@@ -115,20 +116,6 @@ public class Client {
         return port >= 1025 && port <= 65535 || port == 0;
     }
 
-
-    /**
-     * Writes to console message with timestamp
-     *
-     * @param message message
-     */
-    private static void writeMessage(String message) {
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy");
-
-        String finalMessage = "[".concat(dateTimeFormatter.format(LocalDateTime.now()).concat("] "));
-
-        System.out.println(finalMessage.concat(message));
-    }
 
     private static void clearConsole() {
         System.out.print("\033[H\033[2J");

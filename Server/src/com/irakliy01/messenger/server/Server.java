@@ -4,13 +4,13 @@ package com.irakliy01.messenger.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
+
+import static com.irakliy01.messenger.lib.Writer.writeMessage;
 
 /**
  * <p>Main class of the module Server. It contains only private static methods and one public method (main)</p>
@@ -111,19 +111,6 @@ public class Server {
         }
     }
 
-    /**
-     * Writes to console message with timestamp
-     *
-     * @param message message
-     */
-    private static void writeMessage(String message) {
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy");
-
-        String finalMessage = "[".concat(dateTimeFormatter.format(LocalDateTime.now()).concat("] "));
-
-        System.out.println(finalMessage.concat(message));
-    }
 
     /**
      * Clears console
