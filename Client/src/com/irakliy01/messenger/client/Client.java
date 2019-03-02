@@ -71,7 +71,7 @@ public class Client {
 
             while (true) {
                 String line = console.nextLine();
-                if (line.toLowerCase().trim().equals("exit"))
+                if (line.toLowerCase().trim().equals("/exit"))
                     break;
                 dataOutputStream.writeUTF(line);
                 dataOutputStream.flush();
